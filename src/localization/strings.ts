@@ -1,95 +1,13 @@
-type SameKeys<T, K extends PropertyKey> = {
-  [L in keyof T]: Record<K, string> & Record<Exclude<keyof T[L], K>, never>;
-};
+import { en } from './en'
+import { de } from './de'
 
-function defineTranslations<
-  const T extends Record<string, Record<string, string>>,
->(translations: T & SameKeys<T, keyof T[keyof T]>): T {
-  return translations;
-}
+// Every language must have exactly the same translation keys.
+type SameKeys<A, B> =
+  Exclude<keyof A, keyof B> extends never
+    ? Exclude<keyof B, keyof A> extends never ? true : never
+    : never
+const sameKeys: SameKeys<typeof en, typeof de> = true
+void sameKeys
 
-export const names = defineTranslations({
-  en: {
-    time: "Time",
-    people: "People",
-    reorder: "Reorder timezones",
-    none: "No people yet",
-    hint: "Add someone to start tracking their local time.",
-    add: "Add Person",
-    edit: "Edit Person",
-    name: "Name *",
-    nickname: "Nickname",
-    description: "Additional Details",
-    timezone: "Timezone",
-    choose: "Choose Timezone",
-    newZone: "Create a new Timezone",
-    existing: "Choose an existing Timezone",
-    zoneName: "Timezone Display Name *",
-    iana: "IANA Timezone ID *",
-    field: "Field Name",
-    value: "Value",
-    addField: "Add Field",
-    remove: "Remove Field",
-    save: "Save",
-    cancel: "Cancel",
-    close: "Close",
-    details: "Additional Details",
-    noDetails: "No additional details yet.",
-    editDetails: "Edit details",
-    delete: "Delete Person",
-    deleteQuestion: "Delete this person?",
-    deleteWarning:
-      "This permanently deletes this person and their custom fields. Their timezone will be removed if nobody else uses it.",
-    compare: "Compare Times",
-    your: "Your Time",
-    now: "Now",
-    done: "Done",
-    drag: "Drag the handle beside a timezone to change its position.",
-    invalid: "Choose a valid IANA timezone ID.",
-    duplicate: "This timezone was already added.",
-    required: "Please fill out the required fields.",
-    duplicateField: "A person cannot have multiple fields with the same name.",
-  },
-  de: {
-    time: "Zeit",
-    people: "Personen",
-    reorder: "Zeitzonen sortieren",
-    none: "Noch keine Personen",
-    hint: "Füge jemanden hinzu, um die Ortszeit zu verfolgen.",
-    add: "Person hinzufügen",
-    edit: "Person bearbeiten",
-    name: "Name *",
-    nickname: "Spitzname",
-    description: "Weitere Details",
-    timezone: "Zeitzone",
-    choose: "Zeitzone auswählen",
-    newZone: "Neue Zeitzone erstellen",
-    existing: "Bestehende Zeitzone auswählen",
-    zoneName: "Name der Zeitzone *",
-    iana: "IANA-Zeitzonen-ID *",
-    field: "Feldname",
-    value: "Wert",
-    addField: "Feld hinzufügen",
-    remove: "Entfernen",
-    save: "Speichern",
-    cancel: "Abbrechen",
-    close: "Schließen",
-    details: "Weitere Details",
-    noDetails: "Noch keine weiteren Details.",
-    editDetails: "Details bearbeiten",
-    delete: "Person löschen",
-    deleteQuestion: "Diese Person löschen?",
-    deleteWarning:
-      "Diese Person und ihre Felder werden dauerhaft gelöscht. Nicht mehr verwendete Zeitzonen werden entfernt.",
-    compare: "Zeiten vergleichen",
-    your: "Deine Zeit",
-    now: "Jetzt",
-    done: "Fertig",
-    drag: "Ziehe die Zeitzonen am Griff in die gewünschte Reihenfolge.",
-    invalid: "Wähle eine gültige IANA-Zeitzonen-ID.",
-    duplicate: "Diese Zeitzone existiert bereits.",
-    required: "Bitte Pflichtfelder ausfüllen.",
-    duplicateField: "Feldnamen dürfen nicht doppelt vorkommen.",
-  },
-});
-export type Lang = keyof typeof names;
+export const names = { en, de }
+export type Lang = keyof typeof names
